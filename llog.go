@@ -26,9 +26,9 @@ const (
 	LvlInfo Level = 3
 	// LvlWarn something goes wrong but is not really an error
 	LvlWarn Level = 4
-	// LvlError an error has occured
+	// LvlError an error has occurred
 	LvlError Level = 5
-	// LvlPanic a non-recoverable error has occured
+	// LvlPanic a non-recoverable error has occurred
 	LvlPanic Level = 6
 )
 
