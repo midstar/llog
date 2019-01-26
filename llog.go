@@ -1,7 +1,7 @@
 // Package llog (Level Logger) extends the standard log package with:
 //
-//* configurable log levels
-//* log file wrapping if configurable size exceeded
+//  * configurable log levels
+//  * log file wrapping if configurable size exceeded
 //
 // llog is using the "standard" logger in the log package.
 //

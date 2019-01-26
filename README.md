@@ -13,8 +13,8 @@ Package llog (Level Logger) extends the standard golang log package with:
 
 llog is using the "standard" logger in the log package. 
 
-Super simple usage and no configuration required if logging to 
-stderr is used. 
+Super simple usage and no configuration required except specifying
+the log file name (stderr is used if omitted). 
 
 llog is thread safe and can be used from more than one goroutine.
 
