@@ -49,8 +49,8 @@ func TestLevelTrace(t *testing.T) {
 		t.Fatalf("All levels should have been logged! Result:\n%s", result)
 	}
 	// Check that parameters are ok
-	if !strings.Contains(result, "TRACE - this is a trace -param 1 and param 2") {
-		t.Fatalf("Log trace is not correct")
+	if !strings.Contains(result, "TRACE - this is a trace - param 1 and param 2") {
+		t.Fatalf("Log trace is not correct: %s", result)
 	}
 }
 func TestLevelDebug(t *testing.T) {

@@ -116,7 +116,7 @@ func loglevel(level Level, prefix string, format string, v ...interface{}) {
 
 // Trace writes a log on trace level
 func Trace(format string, v ...interface{}) {
-	loglevel(LvlTrace, "TRACE -", format, v...)
+	loglevel(LvlTrace, "TRACE - ", format, v...)
 }
 
 // Debug writes a log on debug level
