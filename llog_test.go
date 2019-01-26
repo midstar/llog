@@ -97,10 +97,21 @@ func TestPanic(t *testing.T) {
 			if !strings.Contains(result, "PANIC") {
 				t.Fatalf("Log contains no PANIC entry")
 			}
+			if !strings.Contains(result, "llog_test.go") {
+				t.Fatalf("The filename is not logged")
+			}
 		}
 	}()
 	Panic("Panic here")
 	t.Fatalf("The code did not panic")
+}
+
+func TestFileNameLogged(t *testing.T) {
+	SetLevel(LvlInfo)
+	_, result := logAndGetLevelsLogged()
+	if !strings.Contains(result, "llog_test.go") {
+		t.Fatalf("The filename is not logged")
+	}
 }
 
 func TestSetFile(t *testing.T) {

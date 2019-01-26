@@ -1,7 +1,7 @@
 // Package llog (Level Logger) extends the standard log package with:
 //
-//  * configurable log levels
-//  * log file wrapping if configurable size exceeded
+//* configurable log levels
+//* log file wrapping if configurable size exceeded
 //
 // llog is using the "standard" logger in the log package.
 //
@@ -9,6 +9,7 @@
 package llog
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -35,7 +36,7 @@ const (
 // globLevelSet is the current level set. Default is LvlInfo.
 var globLevelSet = LvlInfo
 
-// globFile is the file where logging output goes or nil if stdin
+// globFile is the file where logging output goes or nil if stderr
 var globFile *os.File
 
 // globMaxSizeKB max size of log file until wrap
@@ -109,7 +110,7 @@ func wrapLogIfNeeded() {
 func loglevel(level Level, prefix string, format string, v ...interface{}) {
 	if level >= globLevelSet {
 		wrapLogIfNeeded()
-		log.Printf(prefix+format, v...)
+		log.Output(3, fmt.Sprintf(prefix+format, v...))
 	}
 }
 
@@ -142,6 +143,7 @@ func Error(format string, v ...interface{}) {
 // the log and calls panic()
 func Panic(format string, v ...interface{}) {
 	if LvlPanic >= globLevelSet {
-		log.Panicf("PANIC - "+format, v...)
+		log.Output(2, fmt.Sprintf("PANIC - "+format, v...))
+		panic(format)
 	}
 }

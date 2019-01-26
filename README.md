@@ -11,10 +11,12 @@ Package llog (Level Logger) extends the standard golang log package with:
 * configurable log levels
 * log file wrapping if configurable size exceeded
 
-llog is using the "standard" logger in the log package.
+llog is using the "standard" logger in the log package. 
 
 Super simple usage and no configuration required if logging to 
 stderr is used. 
+
+llog is thread safe and can be used from more than one goroutine.
 
 ## Install
 
@@ -55,6 +57,11 @@ func main() {
 	llog.Trace("This entry will not be in the log since SetLevel is LvlInfo")
 }
 ```
+
+The file "mylog.txt" will look like this:
+
+	2019/01/26 22:57:15 example.go:18: INFO - This is an info entry. Parameter 23
+	2019/01/26 22:57:15 example.go:19: WARN - This is a warning entry
 
 ## Notes
 
