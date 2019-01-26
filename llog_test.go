@@ -48,6 +48,10 @@ func TestLevelTrace(t *testing.T) {
 	if !l.trace || !l.debug || !l.info || !l.warn || !l.err {
 		t.Fatalf("All levels should have been logged! Result:\n%s", result)
 	}
+	// Check that parameters are ok
+	if !strings.Contains(result, "TRACE - this is a trace -param 1 and param 2") {
+		t.Fatalf("Log trace is not correct")
+	}
 }
 func TestLevelDebug(t *testing.T) {
 	SetLevel(LvlDebug)
@@ -94,7 +98,7 @@ func TestPanic(t *testing.T) {
 		// Panic handler (panic is expected)
 		if r := recover(); r != nil {
 			result := buffer.String()
-			if !strings.Contains(result, "PANIC") {
+			if !strings.Contains(result, "PANIC - Panic here param 28") {
 				t.Fatalf("Log contains no PANIC entry")
 			}
 			if !strings.Contains(result, "llog_test.go") {
@@ -102,7 +106,7 @@ func TestPanic(t *testing.T) {
 			}
 		}
 	}()
-	Panic("Panic here")
+	Panic("Panic here param %d", 28)
 	t.Fatalf("The code did not panic")
 }
 

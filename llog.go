@@ -144,6 +144,6 @@ func Error(format string, v ...interface{}) {
 func Panic(format string, v ...interface{}) {
 	if LvlPanic >= globLevelSet {
 		log.Output(2, fmt.Sprintf("PANIC - "+format, v...))
-		panic(format)
+		panic(fmt.Sprintf(format, v...))
 	}
 }
