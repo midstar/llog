@@ -174,7 +174,7 @@ func fileModTime(fileName string) time.Time {
 }
 
 func TestLogWrap(t *testing.T) {
-	logFileName := "tmplog.txt"
+	logFileName := "logwraplog.txt"
 	backupFileName := logFileName + ".1"
 	// Remove old files if exist
 	os.Remove(logFileName)
@@ -216,4 +216,49 @@ func TestLogWrap(t *testing.T) {
 	globFile = nil
 	os.Remove(logFileName)
 	os.Remove(backupFileName)
+}
+
+func TestLogWrapInFolder(t *testing.T) {
+	os.MkdirAll("afolder", os.ModePerm)
+	logFileName := "afolder/wrapfolderlog.txt"
+	backupFileName := logFileName + ".1"
+	// Remove old files if exist
+	os.Remove(logFileName)
+	os.Remove(backupFileName)
+	// Check that no backup file exist
+	if fileExist(backupFileName) {
+		t.Fatalf("Unable to remove backup file")
+	}
+	SetLevel(LvlInfo)
+	err := SetFile(logFileName, 7) // Max size 7 KB
+	if err != nil {
+		t.Fatalf("Unable to log to file. Reason: %s", err)
+	}
+
+	nbrOfWraps := 0
+	lastModTime := time.Now()
+	for i := 0; i < 700; i++ {
+		Info("entry %d", i)
+		if fileSizeKB(logFileName) > 8 {
+			t.Fatalf("Log file is exceeding 7 + 1 KB")
+		}
+		if fileExist(backupFileName) && lastModTime != fileModTime(backupFileName) {
+			lastModTime = fileModTime(backupFileName)
+			nbrOfWraps++
+			fileSize := fileSizeKB(backupFileName)
+			if fileSize < 7 || fileSize > 8 {
+				t.Fatalf("Wrong backup file size (expected 7-8 KB): %d", fileSize)
+			}
+		}
+	}
+	t.Logf("During test it was %d number of wraps", nbrOfWraps)
+	if nbrOfWraps < 3 {
+		t.Fatalf("To few wraps: %d", nbrOfWraps)
+	}
+	// Cleanup
+	log.SetOutput(os.Stderr)
+	globFile.Sync()
+	globFile.Close()
+	globFile = nil
+	os.RemoveAll("afolder")
 }

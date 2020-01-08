@@ -36,6 +36,9 @@ const (
 // globLevelSet is the current level set. Default is LvlInfo.
 var globLevelSet = LvlInfo
 
+// globFileName is the name of file where logging output goes or nil if stderr
+var globFileName string
+
 // globFile is the file where logging output goes or nil if stderr
 var globFile *os.File
 
@@ -62,7 +65,8 @@ func SetLevel(level Level) {
 // will be written. If an error occurs stderr logging will be kept.
 func SetFile(fileName string, maxSizeKB int) error {
 	var err error
-	globFile, err = os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	globFileName = fileName
+	globFile, err = os.OpenFile(globFileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		globFile = nil
 		return err
@@ -97,12 +101,11 @@ func wrapLogIfNeeded() {
 		if (info.Size() / 1024) >= int64(globMaxSizeKB) {
 			// Time to wrap
 			log.SetOutput(os.Stderr) // Temporary log to stderr
-			fileName := info.Name()
 			globFile.Close() // Close file
-			backupFileName := fileName + ".1"
+			backupFileName := globFileName + ".1"
 			os.Remove(backupFileName)           // Remove backup if existing
-			os.Rename(fileName, backupFileName) // Make backup
-			SetFile(fileName, globMaxSizeKB)    // Start over on log
+			os.Rename(globFileName, backupFileName) // Make backup
+			SetFile(globFileName, globMaxSizeKB)    // Start over on log
 		}
 	}
 }
